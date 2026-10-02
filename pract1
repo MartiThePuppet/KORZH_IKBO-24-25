@@ -60,7 +60,7 @@ grep -v '^#' /etc/protocols | awk '{print $2, $1}' | sort -rn | head -n 5
 
 Перед отправкой решения проверьте его в ShellCheck на предупреждения.
 
-Ответ (Код самой программы banner):
+Ответ:
 
 ```
 #!/bin/bash
@@ -96,8 +96,19 @@ h hello include int main n printf return stdio void world
 Ответ:
 
 ```
+#!/bin/bash
 
+file="$1"
+
+identifiers=$(grep -o -E '\b[a-zA-Z]*\b' "$file" | sort -u)
+
+echo "Идентификаторы:"
+echo "$identifiers"
 ```
+
+`file=$1` - 
+
+`identifiers=$(grep -o -E '\b[a-zA-Z]*\b' "$file" | sort -u)` - 
 
 ## Задача 5
 
