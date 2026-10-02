@@ -12,9 +12,7 @@
 grep -o '^[^:]*' /etc/passwd | sort
 ```
 
-`grep -o` -
-
-`'^[^:]*'` - 
+`grep -o '^[^:]*'` - 
 
 `/etc/passwd` - 
 
@@ -147,8 +145,21 @@ echo "Файл '$file' скопирован в usr/local/bin/, права был
 Ответ:
 
 ```
+#!/bin/bash
 
+for file in *.c *.js *.py; do
+    line=$(head -n 1 "$file")
+    if [[ $line == "#"* || $line == "//"* || $line == "/*"* ]]; then
+        echo "Файл $file начинается с комментария"
+    else
+        echo "Файл $file не начинается с комментария"
+    fi
+done
 ```
+
+`for file in *.c *.js *.py;` - 
+
+`line=$(head -n 1 "$file")` - 
 
 ## Задача 7
 
@@ -157,8 +168,40 @@ echo "Файл '$file' скопирован в usr/local/bin/, права был
 Ответ:
 
 ```
+#!/bin/bash
 
+declare -A duplicats
+
+findDuplicates() 
+{
+    local dir="$1"
+    
+
+    for file in "$dir"/*; do
+        if [[ -f "$file" ]]; then
+            file=$(basename "$file")
+            if [ duplicats["$file"] ]; then
+                duplicats["$file"]=$((duplicats["$file"] + 1))
+            else
+                duplicats["$file"]=1
+            fi
+
+            if [ "${duplicats["$file"]}" -eq 2 ]; then
+                echo "Файл-дубликат - '$file'"
+            fi
+
+        elif [[ -d "$file" ]]; then
+            findDuplicates "$file"
+        fi
+    done
+}
+
+findDuplicates "."
 ```
+
+`declare -A duplicats` - 
+
+`local dir="$1"` - 
 
 ## Задача 8
 
@@ -167,8 +210,18 @@ echo "Файл '$file' скопирован в usr/local/bin/, права был
 Ответ:
 
 ```
+#!/bin/bash
 
+files=( $(find . -type f -name "*.$1") )
+
+tar -cvf "archive.tar" "${files[@]}"
+
+echo "Архив создан"
 ```
+
+`files=( $(find . -type f -name "*.$1") )` - 
+
+`tar -cvf "archive.tar" "${files[@]}"` - 
 
 ## Задача 9
 
@@ -177,8 +230,16 @@ echo "Файл '$file' скопирован в usr/local/bin/, права был
 Ответ:
 
 ```
+#!/bin/bash
 
+sed 's/    /\t/g' "$1" > "$2"
+
+echo "Файл исправлен"
 ```
+
+`sed 's/    /\t/g'` - sed s/что_заменять/на_что_заменять/опции (g - Замените все вхождения строки в файле)
+
+`"$1" > "$2"` - передача вывода второму аргументу
 
 ## Задача 10
 
@@ -187,5 +248,14 @@ echo "Файл '$file' скопирован в usr/local/bin/, права был
 Ответ:
 
 ```
+#!/bin/bash
 
+for file in "$1"/*; do
+    if [[ -f "$file" && ! -s "$file" ]]; then
+        echo "Пустой файл: $file"
+    fi
+done
 ```
+
+`for file in "$1"/*;` - 
+`if [[ -f "$file" && ! -s "$file" ]];` - 
