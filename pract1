@@ -125,8 +125,20 @@ echo "$identifiers"
 Ответ:
 
 ```
+#!/bin/bash
 
+file=$1
+
+chmod 755 "./$file"
+
+sudo cp "$file" /usr/local/bin/
+
+echo "Файл '$file' скопирован в usr/local/bin/, права были выданы"
 ```
+
+`chmod 755 "./$file"` - 
+
+`sudo cp "$file" /usr/local/bin/` - 
 
 ## Задача 6
 
